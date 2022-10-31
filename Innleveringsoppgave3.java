@@ -42,10 +42,10 @@ class Innleveringsoppgave3
             G.chillesteVei(G.V.get("nm4689420"), G.V.get("nm0000365"));
             System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
     
-            // System.out.println("<<<<<<OPPGAVE 4>>>>>>\n");
+            System.out.println("<<<<<<OPPGAVE 4>>>>>>\n");
     
-            // G.components();
-            // System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            G.components();
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
         }
     
 
@@ -197,12 +197,12 @@ class Innleveringsoppgave3
                 for (Actor v : x.actors)
                 {
                     float c = u.weight + (10 - x.rating);
-                    if (path.get(v) == null) { path.put(v, new Edge(x, u.actor, Float.MAX_VALUE)); }
+                    if (path.get(v) == null) { path.put(v, new Edge(null, u.actor, Float.MAX_VALUE)); }
                     if (c < path.get(v).weight)
                     {
                         Edge w = path.get(v);
                         w.weight = c;
-                        w.movie = x;
+                        w.movie = u.movie;
                         path.put(v,w);
                         queue.add(new Edge(x,v,c));
                     }
@@ -220,61 +220,64 @@ class Innleveringsoppgave3
     }
 
 
-    // //  oppgave 4
+    //  oppgave 4
 
-    // HashSet<Actor> DFSvisit(Actor s, HashSet<Actor> visited)
-    // {
-    //     HashSet<Actor> komponent = new HashSet<>();
-    //     Stack<Actor> stack = new Stack<>();
-    //     stack.push(s);
-    //     while (!stack.isEmpty())        
-    //     {
-    //         Actor u = stack.pop();
-    //         if (!visited.contains(u))
-    //         {
-    //             visited.add(u);
-    //             komponent.add(u);
-    //             try 
-    //             {
-    //                 for (Edge v : E.get(u))
-    //                 {
-    //                     stack.push(v.actor);
-    //                 } 
-    //             }
-    //         catch (NullPointerException e) { /*ingen kant*/ }
-    //         }
-    //     }       
-    //     return komponent;
-    // }
+    HashSet<Actor> DFSvisit(Actor s, HashSet<Actor> visited)
+    {
+        HashSet<Actor> komponent = new HashSet<>();
+        Stack<Actor> stack = new Stack<>();
+        stack.push(s);
+        while (!stack.isEmpty())        
+        {
+            Actor u = stack.pop();
+            if (!visited.contains(u))
+            {
+                visited.add(u);
+                komponent.add(u);
+                try 
+                {
+                    for (Movie x : u.movies)
+                    {
+                        for (Actor v : x.actors)
+                        {
+                            stack.push(v);
+                        }
+                    } 
+                }
+            catch (NullPointerException e) { /*ingen kant*/ }
+            }
+        }       
+        return komponent;
+    }
 
 
-    // void components()
-    // {
-    //     HashSet<Actor> visited = new HashSet<>();
-    //     ArrayList<HashSet<Actor>> komponenter = new ArrayList<>();
-    //     for (Actor v : V.values())
-    //     {
-    //         if (!visited.contains(v))
-    //         {
-    //             HashSet<Actor> komponent = DFSvisit(v, visited);
-    //             komponenter.add(komponent);
-    //         }
-    //     }
+    void components()
+    {
+        HashSet<Actor> visited = new HashSet<>();
+        ArrayList<HashSet<Actor>> komponenter = new ArrayList<>();
+        for (Actor v : V.values())
+        {
+            if (!visited.contains(v))
+            {
+                HashSet<Actor> komponent = DFSvisit(v, visited);
+                komponenter.add(komponent);
+            }
+        }
 
-    //     //  teller og printer resultatet
+        //  teller og printer resultatet
         
-    //     HashMap<Integer,Integer> sizes = new HashMap<>();
-    //     for (HashSet<Actor> komponent : komponenter)
-    //     {
-    //         sizes.putIfAbsent(komponent.size(), 0);
-    //         int size = sizes.get(komponent.size());
-    //         sizes.put(komponent.size(), size+1);
-    //     }
-    //     for (int i : sizes.keySet())
-    //     {
-    //         System.out.println("There are " + sizes.get(i) + " components of size " + i );
-    //     }
-    // }
+        HashMap<Integer,Integer> sizes = new HashMap<>();
+        for (HashSet<Actor> komponent : komponenter)
+        {
+            sizes.putIfAbsent(komponent.size(), 0);
+            int size = sizes.get(komponent.size());
+            sizes.put(komponent.size(), size+1);
+        }
+        for (int i : sizes.keySet())
+        {
+            System.out.println("There are " + sizes.get(i) + " components of size " + i );
+        }
+    }
 
     
     
@@ -283,13 +286,11 @@ class Innleveringsoppgave3
     
     
     
-    //  representer grafen med naboliste
 
     static Innleveringsoppgave3 byggGraf(String[] args) throws IOException 
     {
         HashMap<String, Movie> M = new HashMap<>();
         HashMap<String, Actor> V = new HashMap<>();
-        // HashMap<Actor,HashSet<Edge>> E = new HashMap<>();
 
         //  movies.tsv
 
