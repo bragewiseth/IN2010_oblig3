@@ -24,7 +24,7 @@ class Innleveringsoppgave3
             System.out.println("<<<<<<OPPGAVE 1>>>>>>\n");
     
             G.printGraf();  
-            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms\n");
     
             System.out.println("<<<<<<OPPGAVE 2>>>>>>\n");
     
@@ -33,19 +33,21 @@ class Innleveringsoppgave3
             G.shortestPathBFS(G.V.get("nm4689420"), G.V.get("nm0000365")); 
             G.shortestPathBFS(G.V.get("nm0000288"), G.V.get("nm0001401")); 
             G.shortestPathBFS(G.V.get("nm0031483"), G.V.get("nm0931324")); 
-            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms\n");
     
             System.out.println("<<<<<<OPPGAVE 3>>>>>>\n");
     
             G.chillesteVei(G.V.get("nm2255973"), G.V.get("nm0000460"));
             G.chillesteVei(G.V.get("nm0424060"), G.V.get("nm0000243")); 
             G.chillesteVei(G.V.get("nm4689420"), G.V.get("nm0000365"));
-            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            G.chillesteVei(G.V.get("nm0000288"), G.V.get("nm0001401")); 
+            G.chillesteVei(G.V.get("nm0031483"), G.V.get("nm0931324"));
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms\n");
     
             System.out.println("<<<<<<OPPGAVE 4>>>>>>\n");
     
             G.components();
-            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms\n");
         }
     
 
@@ -168,12 +170,18 @@ class Innleveringsoppgave3
             }
         }
         //  printer resultetet
+        System.out.println("   FROM\t\t==>\t    TO\t\t\t\tMOVIE");
+        System.out.println("_____________________________________________________________________________________");
         while (end != start)
         {
-            System.out.print(end.actor + "\n [" + end.movie + "]\t==>\t");
+            System.out.print(end.actor);
+            if (end.actor.toString().length() < 16)                 { System.out.print("\t"); }
+            System.out.print("\t" + path.get(end.actor).actor);
+            if (path.get(end.actor).actor.toString().length() < 16) { System.out.print("\t"); }
+            System.out.println("\t  [" + end.movie + "]"); 
             end = path.get(end.actor);
         }
-        System.out.println(end.actor + "\n");
+        System.out.println("_____________________________________________________________________________________\n");
     }
     
     
@@ -210,13 +218,19 @@ class Innleveringsoppgave3
             }
         }
         float tot_weight = end.weight;
+        System.out.println("   FROM\t\t==>\t    TO\t\t\t\tMOVIE");
+        System.out.println("_____________________________________________________________________________________");
         while (end.actor != start.actor)
         {
-            System.out.print(end.actor + "\n [" + end.movie + "]\t==>\t");
+            System.out.print(end.actor);
+            if (end.actor.toString().length() < 16)                 { System.out.print("\t"); }
+            System.out.print("\t" + path.get(end.actor).actor);
+            if (path.get(end.actor).actor.toString().length() < 16) { System.out.print("\t"); }
+            System.out.println("\t  [" + end.movie + "]"); 
             end = path.get(end.actor);
         }
-        System.out.println(end.actor);
-        System.out.print("Total weight: " + String.format("%.2g%n", tot_weight) + "\n"); 
+        System.out.print("TOTAL WEIGHT: " + String.format("%.3s", tot_weight) + "\n"); 
+        System.out.println("_____________________________________________________________________________________\n");
     }
 
 
@@ -275,7 +289,7 @@ class Innleveringsoppgave3
         }
         for (int i : sizes.keySet())
         {
-            System.out.println("There are " + sizes.get(i) + " components of size " + i );
+            System.out.println("There are " + sizes.get(i) + "\tcomponents of size " + i );
         }
     }
 
