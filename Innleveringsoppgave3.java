@@ -17,30 +17,30 @@ class Innleveringsoppgave3
 
         public static void main(String[] args) throws IOException 
         {
-            // long startTime = System.nanoTime();
+            long startTime = System.nanoTime();
     
             Innleveringsoppgave3 G = byggGraf(args);
     
             System.out.println("<<<<<<OPPGAVE 1>>>>>>\n");
     
             G.printGraf();  
-            // System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
     
-            // System.out.println("<<<<<<OPPGAVE 2>>>>>>\n");
+            System.out.println("<<<<<<OPPGAVE 2>>>>>>\n");
     
-            // G.shortestPathBFS(G.V.get("nm2255973"), G.V.get("nm0000460")); 
-            // G.shortestPathBFS(G.V.get("nm0424060"), G.V.get("nm0000243")); 
-            // G.shortestPathBFS(G.V.get("nm4689420"), G.V.get("nm0000365")); 
-            // G.shortestPathBFS(G.V.get("nm0000288"), G.V.get("nm0001401")); 
-            // G.shortestPathBFS(G.V.get("nm0031483"), G.V.get("nm0931324")); 
-            // // System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            G.shortestPathBFS(G.V.get("nm2255973"), G.V.get("nm0000460")); 
+            G.shortestPathBFS(G.V.get("nm0424060"), G.V.get("nm0000243")); 
+            G.shortestPathBFS(G.V.get("nm4689420"), G.V.get("nm0000365")); 
+            G.shortestPathBFS(G.V.get("nm0000288"), G.V.get("nm0001401")); 
+            G.shortestPathBFS(G.V.get("nm0031483"), G.V.get("nm0931324")); 
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
     
-            // System.out.println("<<<<<<OPPGAVE 3>>>>>>\n");
+            System.out.println("<<<<<<OPPGAVE 3>>>>>>\n");
     
-            // G.chillesteVei(G.V.get("nm2255973"), G.V.get("nm0000460"));
-            // G.chillesteVei(G.V.get("nm0424060"), G.V.get("nm0000243")); 
-            // G.chillesteVei(G.V.get("nm4689420"), G.V.get("nm0000365"));
-            // // System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
+            G.chillesteVei(G.V.get("nm2255973"), G.V.get("nm0000460"));
+            G.chillesteVei(G.V.get("nm0424060"), G.V.get("nm0000243")); 
+            G.chillesteVei(G.V.get("nm4689420"), G.V.get("nm0000365"));
+            System.out.println((System.nanoTime() - startTime) / 1000000 + "ms");
     
             // System.out.println("<<<<<<OPPGAVE 4>>>>>>\n");
     
@@ -51,29 +51,25 @@ class Innleveringsoppgave3
 
 
 
-    static class Edge 
+    static class Edge implements Comparable<Edge>
     {
         Movie movie;
         Actor actor;
-        Edge(Movie movie, Actor actor) { this.movie = movie; this.actor = actor; }
-    }
-
-    //  edgecontainer med weight
-    //  brukes i Dijkstra for å ikke ødelegge grafen, 
-    static class SuperEdge implements Comparable<SuperEdge>
-    {
         float weight;
-        Edge edge;
-        SuperEdge(Edge v, float weight) { this.edge = v; this.weight = weight; }
+        Edge(Movie movie, Actor actor, float weight) 
+        { 
+            this.movie = movie; this.actor = actor; this.weight = weight; 
+        }
 
-        public int compareTo(SuperEdge v) 
+        @Override
+        public int compareTo(Edge v) 
         {
             if (this.weight > v.weight) { return 1; }
             if (this.weight < v.weight) { return -1; }
             return 0;
         }
         @Override
-        public String toString() { return edge.actor.toString(); }
+        public String toString() { return actor.toString(); }
     }
 
 
@@ -118,11 +114,11 @@ class Innleveringsoppgave3
     //  mainclass konstruktør
 
     HashMap<String, Actor> V;
-    // HashMap<Actor, HashSet<Edge>> E;
+    HashMap<String, Movie> M;
     
-    Innleveringsoppgave3 (HashMap<String,Actor> V)
+    Innleveringsoppgave3 (HashMap<String,Actor> V, HashMap<String,Movie> M)
     {
-        // this.E = E;
+        this.M = M;
         this.V = V;
     }
     @Override
@@ -136,12 +132,9 @@ class Innleveringsoppgave3
     {
         System.out.println("Nodes: \t" + V.size());
         int size = 0;
-        for (Actor actor : V.values())
+        for (Movie movie : M.values())
         {   
-            for (Movie movie : actor.movies)
-            {
-                size += ((movie.actors.size() - 1) * movie.actors.size()) / 2;
-            }
+            size = size + ((movie.actors.size() - 1) * movie.actors.size()) / 2;
         }
         System.out.println("Edges: \t" + size + "\n");
     }
@@ -149,75 +142,82 @@ class Innleveringsoppgave3
     
     //  oppgave 2
 
-    // void shortestPathBFS(Actor a, Actor b)
-    // {
-    //     HashMap<Edge,Edge> path = new HashMap<>();
-    //     ArrayList<Edge> queue = new ArrayList<>();
-    //     Edge start = new Edge(null, b);
-    //     Edge end = start;
-    //     queue.add(start);
-    //     path.put(start, null);
-    //     outer : while (!queue.isEmpty())
-    //     {
-    //         Edge u = queue.remove(0);
-    //         for (Edge v : E.get(u.actor)) 
-    //         {
-    //             if (path.get(v) == null)
-    //             {
-    //                 path.put(v, u);
-    //                 if (v.actor == a) {end = v; break outer;}
-    //                 queue.add(v);
-    //             }
-                    
-    //         }
-    //     }
-    //     //  printer resultetet
-    //     while (end != start)
-    //     {
-    //         System.out.print(end.actor + "\n [" + end.movie + "]\t==>\t");
-    //         end = path.get(end);
-    //     }
-    //     System.out.println(end.actor + "\n");
-    // }
+    void shortestPathBFS(Actor a, Actor b)
+    {
+        HashMap<Actor,Edge> path = new HashMap<>();
+        ArrayList<Edge> queue = new ArrayList<>();
+        Edge start = new Edge(null, b, 0f);
+        Edge end = start;
+        queue.add(start);
+        path.put(b, null);
+        outer : while (!queue.isEmpty())
+        {
+            Edge u = queue.remove(0);
+            for (Movie x : u.actor.movies) 
+            {
+                for (Actor v : x.actors)
+                {
+                    if (path.get(v) == null)
+                    {
+                        path.put(v, u);
+                        Edge yurr = new Edge(x,v, 0f);
+                        if (v == a) {end = yurr; break outer;}
+                        queue.add(yurr);
+                    }
+                }   
+            }
+        }
+        //  printer resultetet
+        while (end != start)
+        {
+            System.out.print(end.actor + "\n [" + end.movie + "]\t==>\t");
+            end = path.get(end.actor);
+        }
+        System.out.println(end.actor + "\n");
+    }
     
     
-    // //  oppgave 3
+    //  oppgave 3
 
-    // void chillesteVei(Actor a, Actor b)
-    // {
-    //     HashMap<Edge,SuperEdge> path = new HashMap<>();
-    //     PriorityQueue<SuperEdge> queue = new PriorityQueue<>();
-    //     SuperEdge start = new SuperEdge(new Edge(null, b), 0f);
-    //     SuperEdge end = start;
-    //     queue.add(start);
-    //     path.put(start.edge, start);
-    //     outer : while (!queue.isEmpty())
-    //     {
-    //         SuperEdge u = queue.poll();
-    //         if (u.edge.actor == a) { end = u; break outer; }
+    void chillesteVei(Actor a, Actor b)
+    {
+        HashMap<Actor,Edge> path = new HashMap<>();
+        PriorityQueue<Edge> queue = new PriorityQueue<>();
+        Edge start = new Edge(null, b, 0f);
+        Edge end = start;
+        queue.add(start);
+        path.put(b, null);
+        outer : while (!queue.isEmpty())
+        {
+            Edge u = queue.poll();
+            if (u.actor == a) { end = u; break outer; }
             
-    //         for (Edge v : E.get(u.edge.actor))
-    //         {
-    //             float c = u.weight + (10 - v.movie.rating);
-    //             if (path.get(v) == null) { path.put(v, new SuperEdge(u.edge, Float.MAX_VALUE)); }
-    //             if (c < path.get(v).weight)
-    //             {
-    //                 SuperEdge w = path.get(v);
-    //                 w.weight = c;
-    //                 path.put(v,w);
-    //                 queue.add(new SuperEdge(v, c));
-    //             }
-    //         }
-    //     }
-    //     float tot_weight = end.weight;
-    //     while (end.edge != start.edge)
-    //     {
-    //         System.out.print(end.edge.actor + "\n [" + end.edge.movie + "]\t==>\t");
-    //         end = path.get(end.edge);
-    //     }
-    //     System.out.println(end.edge.actor);
-    //     System.out.print("Total weight: " + String.format("%.2g%n", tot_weight) + "\n"); 
-    // }
+            for (Movie x : u.actor.movies)
+            {
+                for (Actor v : x.actors)
+                {
+                    float c = u.weight + (10 - x.rating);
+                    if (path.get(v) == null) { path.put(v, new Edge(x, u.actor, Float.MAX_VALUE)); }
+                    if (c < path.get(v).weight)
+                    {
+                        Edge w = path.get(v);
+                        w.weight = c;
+                        w.movie = x;
+                        path.put(v,w);
+                        queue.add(new Edge(x,v,c));
+                    }
+                }
+            }
+        }
+        float tot_weight = end.weight;
+        while (end.actor != start.actor)
+        {
+            System.out.print(end.actor + "\n [" + end.movie + "]\t==>\t");
+            end = path.get(end.actor);
+        }
+        System.out.println(end.actor);
+        System.out.print("Total weight: " + String.format("%.2g%n", tot_weight) + "\n"); 
+    }
 
 
     // //  oppgave 4
@@ -328,23 +328,6 @@ class Innleveringsoppgave3
         }
         br.close();
 
-        //  build edges
-        
-        // for (Movie m : M.values())
-        // {
-        //     for (int i=0; i < m.actors.size(); i++)
-        //     { 
-        //         Actor a = m.actors.remove(i);
-        //         for (Actor b : m.actors)
-        //         {
-        //             Edge edge = new Edge(m, b);
-        //             E.putIfAbsent(a, new HashSet<>());
-        //             E.get(a).add(edge);
-        //         }
-        //         m.actors.add(i,a);
-        //     }
-        // }
-
-        return new Innleveringsoppgave3(V);
+        return new Innleveringsoppgave3(V,M);
     }
 }
