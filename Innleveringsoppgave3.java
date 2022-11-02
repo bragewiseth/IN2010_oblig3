@@ -52,6 +52,9 @@ class Innleveringsoppgave3
     
 
 
+    /////////////////////////////////////////////////////////
+    //  KLASSER /////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
     static class Edge implements Comparable<Edge>
     {
@@ -113,7 +116,9 @@ class Innleveringsoppgave3
 
 
 
-    //  mainclass konstruktør
+    ///////////////////////////////////////////////
+    //  mainclass   ///////////////////////////////
+    ///////////////////////////////////////////////
 
     HashMap<String, Actor> V;
     HashMap<String, Movie> M;
@@ -128,7 +133,7 @@ class Innleveringsoppgave3
     
     
 
-
+    //  printer antall noder og kanter
     
     void printGraf()
     {
@@ -142,13 +147,15 @@ class Innleveringsoppgave3
     }
     
     
-    //  oppgave 2
+    ////////////////////////////////////////////////////////////////////////////
+    //  oppgave 2   ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     void shortestPathBFS(Actor a, Actor b)
     {
-        HashMap<Actor,Edge> path = new HashMap<>();
-        ArrayList<Edge> queue = new ArrayList<>();
-        Edge start = new Edge(null, b, 0f);
+        HashMap<Actor,Edge> path = new HashMap<>();     //  tar vare på korteste vei
+        ArrayList<Edge> queue = new ArrayList<>();      
+        Edge start = new Edge(null, b, 0f);             // Edge har feltene Actor, Movie (og weight, brukes ikke i BFS)
         Edge end = start;
         queue.add(start);
         path.put(b, null);
@@ -161,7 +168,7 @@ class Innleveringsoppgave3
                 {
                     if (path.get(v) == null)
                     {
-                        path.put(v, u);
+                        path.put(v, u);                 //  u er forelder til v 
                         Edge yurr = new Edge(x,v, 0f);
                         if (v == a) {end = yurr; break outer;}
                         queue.add(yurr);
@@ -169,7 +176,9 @@ class Innleveringsoppgave3
                 }   
             }
         }
-        //  printer resultetet
+
+        //  printer resultatat
+
         System.out.println("   FROM\t\t==>\t    TO\t\t\t\tMOVIE");
         System.out.println("_____________________________________________________________________________________");
         while (end != start)
@@ -185,7 +194,9 @@ class Innleveringsoppgave3
     }
     
     
-    //  oppgave 3
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //  oppgave 3   //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     void chillesteVei(Actor a, Actor b)
     {
@@ -234,7 +245,9 @@ class Innleveringsoppgave3
     }
 
 
-    //  oppgave 4
+    ////////////////////////////////////////////////////////////
+    //  oppgave 4   ////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
 
     HashSet<Actor> DFSvisit(Actor s, HashSet<Actor> visited)
     {
@@ -298,7 +311,9 @@ class Innleveringsoppgave3
     
     
     
-    
+    ////////////////////////////////////////////////////
+    //  BYGG GRAFEN ////////////////////////////////////
+    ////////////////////////////////////////////////////
     
 
     static Innleveringsoppgave3 byggGraf(String[] args) throws IOException 

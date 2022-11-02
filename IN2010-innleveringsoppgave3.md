@@ -37,8 +37,8 @@ ___
 På min maskin er kjøretiden til programmet på ca. $2$ sekunder.
 
 + **$500$ ms** | De $500$ første millisekundene blir brukt til å bygge grafen 
-+ **$0$ sek** | Kjøretid på oppgave 2 er neglisjerbar liten
-+ **$2$ sek** | De $2$ neste sekundene blir brukt på oppgave 3 
-+ **$1$ sek** | Det resterende sekundet blir brukt på oppgave 4
++ **$100$ ms** | Kjøretid på oppgave 2 er neglisjerbar liten
++ **$1000$ ms** | Det neste sekundet blir brukt på oppgave 3 
++ **$500$ ms** | $500$ millisekunder blir brukt på oppgave 4
 
 Disse resultatne er ikke overaskende siden de stemmer overens med forventet kjøretid.
